@@ -7,53 +7,78 @@ from datetime import datetime
 from threading import Lock
 import time
 import uuid
-from flask_cors import CORS  # Asegúrate de que esta línea esté presente
+from flask_cors import CORS  # Importamos CORS para habilitar las solicitudes cross-origin
 
 # Configuración de logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(_name_)
 
-app = Flask(__name__)
+app = Flask(_name_)
 # Habilitar CORS para todas las rutas y orígenes
-CORS(app, resources={r"/": {"origins": ""}})  # Para desarrollo
+CORS(app, resources={r"/": {"origins": ""}})
 
 # Configuración de la API de Ollama
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "https://evaenespanol.loca.lt")
 MODEL_NAME = os.environ.get("MODEL_NAME", "neural-chat:7b")
 
-# Contexto del sistema para Curiosity - Mantenido del código original
+# Contexto del sistema para Curiosity - Actualizado para enfocarse en investigación y comparación
 ASSISTANT_CONTEXT = """
-# Curiosity: Agente de Análisis de Competencia Especializado en IA Conversacional
+# Curiosity: Agente de Investigación y Análisis Competitivo en IA Conversacional
 
 ## Rol Principal:
-Eres Curiosity, un producto de Antares Innovate (www.antaresinnovate.com), empresa líder en soluciones de IA conversacional. Como analista de inteligencia competitiva especializado, representas los valores de innovación, precisión y orientación estratégica que caracterizan a Antares Innovate. Tu objetivo es proporcionar análisis detallados y estratégicos del mercado.
+Eres Curiosity, un agente especializado en investigación de mercado y análisis competitivo para soluciones de IA conversacional. Tu misión es analizar otras empresas del sector, compararlas con Antares Innovate (www.antaresinnovate.com), e identificar oportunidades de mejora, elementos a implementar, y estrategias para destacar en el mercado.
 
-## Conocimiento de Antares Innovate:
-- Somos una empresa especializada en soluciones de IA conversacional fundada en 2021.
-- Nuestro lema es "La Creatividad Mueve el Mundo; la Tecnología lo Acelera."
-- Tenemos presencia en Colombia y Estados Unidos.
-- Nuestras principales tecnologías incluyen: procesamiento de lenguaje natural (NLP) avanzado, aprendizaje automático, y asistentes virtuales multicanal.
-- Nuestras principales soluciones son:
+## Objetivo Principal:
+Proporcionar análisis detallados y estratégicos de competidores en el mercado de chatbots avanzados, agentes virtuales y asistentes empresariales, enfocados en Estados Unidos y Colombia. Tu objetivo es identificar tanto las fortalezas que debe emular Antares Innovate como las debilidades que debe evitar.
+
+## Conocimiento sobre Antares Innovate:
+Antares Innovate (www.antaresinnovate.com) es nuestra empresa de referencia para el análisis:
+- Fundada en 2021, se especializa en soluciones de IA conversacional
+- Su lema es "La Creatividad Mueve el Mundo; la Tecnología lo Acelera"
+- Tiene presencia en Colombia y Estados Unidos
+- Ofrece tres soluciones principales:
   1. Antares Virtual Assistant (AVA): Asistente virtual empresarial con capacidades multilingües
   2. Antares Business Intelligence (ABI): Plataforma para analizar interacciones de clientes
   3. Antares Integration Hub (AIH): Sistema para conectar chatbots con CRMs y sistemas empresariales
 
-- Nuestras fortalezas principales son:
-  * Personalización y adaptabilidad a necesidades específicas de cada industria
-  * Integración perfecta con sistemas empresariales existentes
-  * Capacidades multilingües avanzadas con especialización en español e inglés
-  * Análisis de datos en tiempo real para optimizar decisiones empresariales
-  * Escalabilidad para empresas de todos los tamaños
+## Instrucciones para el Análisis:
 
-- Nuestros precios aproximados son:
-  * Plan Básico: $500/mes (hasta 1,000 conversaciones)
-  * Plan Empresarial: $2,000/mes (hasta 10,000 conversaciones)
-  * Plan Enterprise: Personalizado ($5,000+/mes)
+### 1. Análisis de Competidores:
+- Investiga competidores clave en el mercado de IA conversacional como Aivo, Botmaker, IBM Watson Assistant, Botpress, etc.
+- Evalúa sus ofertas, modelo de negocio, propuesta de valor y diferenciales
+- Compara objetivamente sus fortalezas y debilidades frente a Antares Innovate
+- Identifica qué características, tácticas o estrategias debería adoptar Antares Innovate
 
-Impulsamos negocios con IA, automatización y diseño disruptivo, ayudando a marcas visionarias a liderar en el mundo digital.
+### 2. Evaluación de Tendencias del Mercado:
+- Identifica tendencias emergentes en IA conversacional como IA generativa, modelos de lenguaje, automatización avanzada
+- Analiza cómo estas tendencias están influenciando a los líderes del mercado
+- Recomienda cómo Antares Innovate puede aprovechar estas tendencias para diferenciarse
+
+### 3. Benchmarking de Funcionalidades:
+- Evalúa qué funcionalidades específicas destacan en los competidores
+- Identifica qué características técnicas debería implementar Antares Innovate
+- Compara integraciones, capacidades técnicas, UX y facilidad de uso
+
+### 4. Análisis de Precios y Modelos de Negocio:
+- Evalúa las estrategias de precios de los competidores (suscripción, pago por uso, freemium)
+- Compara los planes y características incluidas en cada nivel
+- Recomienda enfoques de precios y paquetización para Antares Innovate
+
+### 5. Recomendaciones Estratégicas:
+- Proporciona recomendaciones concretas, accionables y priorizadas
+- Destaca oportunidades de mercado a corto y largo plazo
+- Identifica nichos de mercado potenciales o sectores donde Antares Innovate podría especializarse
+
+Cuando te soliciten analizar un competidor o tendencia específica, proporciona:
+- Un análisis objetivo de sus fortalezas y debilidades
+- Comparación directa con Antares Innovate
+- Recomendaciones específicas sobre qué adoptar, mejorar o diferenciar
+- Evaluación de la oportunidad/amenaza que representa
+
+Recuerda que tu objetivo es ayudar a Antares Innovate a crear una estrategia competitiva superior, identificando lo mejor del mercado para implementarlo o mejorarlo, mientras se desarrollan diferenciadores únicos.
 """
 
 # Almacenamiento de sesiones
@@ -202,8 +227,8 @@ def call_ollama_completion(prompt, session_id, max_retries=3):
 def home():
     """Ruta de bienvenida básica con información de Antares Innovate"""
     return jsonify({
-        "message": "Curiosity - Agente de Análisis de Competencia by Antares Innovate",
-        "description": "Inteligencia competitiva automatizada para el mercado de chatbots, agentes virtuales y asistentes empresariales",
+        "message": "Curiosity - Agente de Investigación y Análisis Competitivo",
+        "description": "Análisis de mercado y benchmarking para soluciones de IA conversacional",
         "company": "Antares Innovate - Líderes en soluciones de IA conversacional",
         "status": "online",
         "model": MODEL_NAME,
@@ -296,7 +321,7 @@ def health_check():
         
     return jsonify({
         "status": "ok",
-        "service_name": "Curiosity - Chat Assistant",
+        "service_name": "Curiosity - Agente de Investigación y Análisis",
         "provider": "Antares Innovate",
         "model": MODEL_NAME,
         "ollama_url": OLLAMA_URL,
@@ -321,7 +346,7 @@ def get_latest_report():
     return jsonify({
         "id": str(uuid.uuid4()),
         "date": datetime.now().strftime("%Y-%m-%d"),
-        "content": "Esta funcionalidad no está disponible en esta versión. Por favor, use el chat para interactuar con Curiosity."
+        "content": "Esta funcionalidad no está disponible en esta versión. Por favor, use el chat para solicitar análisis de competidores o mercado."
     })
 
 @app.route('/reports', methods=['GET', 'OPTIONS'])
@@ -346,7 +371,7 @@ def get_report_by_id(report_id):
     return jsonify({
         "id": report_id,
         "date": datetime.now().strftime("%Y-%m-%d"),
-        "content": "Esta funcionalidad no está disponible en esta versión. Por favor, use el chat para interactuar con Curiosity."
+        "content": "Esta funcionalidad no está disponible en esta versión. Por favor, use el chat para solicitar análisis de competidores o mercado."
     })
 
 @app.route('/generate-report', methods=['POST', 'OPTIONS'])
@@ -361,7 +386,7 @@ def force_report_generation():
         "message": "Esta funcionalidad no está disponible en esta versión.",
         "date": datetime.now().strftime("%Y-%m-%d"),
         "id": report_id,
-        "content": "Por favor, use el chat para interactuar con Curiosity."
+        "content": "Por favor, use el chat para solicitar análisis específicos de competidores o del mercado."
     })
 
 @app.route('/competitors', methods=['GET', 'OPTIONS'])
@@ -391,11 +416,11 @@ def analyze_competitor():
     url = data.get('url')
     
     return jsonify({
-        "message": "Esta funcionalidad no está disponible en esta versión.",
+        "message": "Esta funcionalidad ha cambiado.",
         "competitor": {
             "name": "Nombre no disponible",
             "url": url,
-            "analysis": "La funcionalidad de análisis de competidores no está disponible en esta versión. Por favor, pregunte directamente en el chat sobre competidores específicos."
+            "analysis": "Por favor, use el chat para solicitar un análisis específico de este competidor, comparándolo con Antares Innovate."
         }
     })
 
@@ -411,7 +436,7 @@ def generate_custom_report():
         "message": "Esta funcionalidad no está disponible en esta versión.",
         "report_id": report_id,
         "date": datetime.now().strftime("%Y-%m-%d"),
-        "content": "Por favor, use el chat para interactuar con Curiosity y pregunte directamente por lo que necesita."
+        "content": "Por favor, use el chat para solicitar análisis específicos de competidores, tendencias de mercado o recomendaciones estratégicas."
     })
 
 @app.route('/web-interface')
@@ -419,7 +444,7 @@ def web_interface():
     """Interfaz web simple para interactuar con Curiosity"""
     return render_template('index.html')
 
-if __name__ == '_main_':
+if _name_ == '_main_':
     # Crear directorio de plantillas si no existe
     os.makedirs('templates', exist_ok=True)
     
@@ -433,7 +458,7 @@ if __name__ == '_main_':
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curiosity - Antares Innovate</title>
+    <title>Curiosity - Análisis de Mercado</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -511,7 +536,7 @@ if __name__ == '_main_':
 </head>
 <body>
     <header>
-        <h1>Curiosity - Asistente de IA Conversacional</h1>
+        <h1>Curiosity - Análisis Competitivo y de Mercado</h1>
         <p>Powered by Antares Innovate - La Creatividad Mueve el Mundo; la Tecnología lo Acelera.</p>
     </header>
 
@@ -520,7 +545,7 @@ if __name__ == '_main_':
             <h2>Chat con Curiosity</h2>
             <div class="messages" id="messages"></div>
             <div>
-                <input type="text" id="user-input" placeholder="Escribe tu mensaje aquí...">
+                <input type="text" id="user-input" placeholder="Pregunta sobre competidores, mercado o recomendaciones estratégicas...">
                 <button id="send-btn">Enviar</button>
             </div>
         </div>
@@ -587,7 +612,7 @@ if __name__ == '_main_':
         });
 
         // Inicialización
-        appendMessage('Hola, soy Curiosity, el asistente de IA de Antares Innovate. ¿En qué puedo ayudarte hoy?', 'bot');
+        appendMessage('Hola, soy Curiosity, especialista en análisis competitivo y de mercado para soluciones de IA conversacional. Puedo ayudarte a comparar competidores con Antares Innovate, analizar tendencias del mercado y proporcionar recomendaciones estratégicas. ¿Sobre qué competidor o tendencia te gustaría saber más?', 'bot');
     </script>
 </body>
 </html>
