@@ -21,7 +21,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/": {"origins": ""}})
 
 # Configuración de la API de Ollama
-OLLAMA_URL = os.environ.get("OLLAMA_URL", "https://agentesantares.loca.lt")
+OLLAMA_URL = os.environ.get("OLLAMA_URL", "neural-chat-server.fly.dev")
 MODEL_NAME = os.environ.get("MODEL_NAME", "neural-chat:7b")
 
 # Contexto del sistema para Curiosity - Actualizado para enfocarse en investigación y comparación
