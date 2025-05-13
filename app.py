@@ -14,9 +14,9 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-logger = logging.getLogger(_name_)
+logger = logging.getLogger(__name__)
 
-app = Flask(_name_)
+app = Flask(__name__)
 # Habilitar CORS para todas las rutas y orígenes
 CORS(app, resources={r"/": {"origins": ""}})
 
@@ -444,7 +444,7 @@ def web_interface():
     """Interfaz web simple para interactuar con Curiosity"""
     return render_template('index.html')
 
-if _name_ == '_main_':
+if __name__ == '_main_':
     # Crear directorio de plantillas si no existe
     os.makedirs('templates', exist_ok=True)
     
