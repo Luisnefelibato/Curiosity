@@ -1,12 +1,18 @@
 services:
   - type: web
-    name: curiosity-agent
-    env: python
+    name: curiosity
+    runtime: python
+    plan: starter
+    repo: https://github.com/yourusername/curiosity-agent.git
+    branch: main
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
+    healthCheckPath: /health
     envVars:
       - key: OLLAMA_URL
         value: https://evaenespanol.loca.lt
       - key: MODEL_NAME
-        value: llama3:8b
+        value: neural-chat:7b
+      - key: PORT
+        value: 10000
     autoDeploy: true

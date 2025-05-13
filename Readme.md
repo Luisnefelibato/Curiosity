@@ -1,99 +1,103 @@
-# Curiosity: Agente de Análisis de Competencia para Antares Innovate
+# Curiosity - Agente de Análisis de Competencia
 
-Curiosity es un agente virtual especializado en análisis de competencia para el mercado de chatbots avanzados, agentes virtuales y asistentes empresariales virtuales. Diseñado específicamente para Antares Innovate, Curiosity realiza análisis diarios del mercado y genera informes estratégicos detallados.
+Curiosity es un agente de inteligencia competitiva especializado en el análisis del mercado de IA conversacional. Desarrollado por Antares Innovate, este servicio proporciona análisis detallados y estratégicos de competidores, tendencias del mercado, comparación de precios y recomendaciones accionables.
 
-## Características Principales
+## Características
 
-- **Análisis diario automatizado**: Genera un informe completo cada día a las 7:00 AM
-- **Monitoreo de competidores**: Identifica y analiza competidores directos e indirectos
-- **Análisis de estrategias**: Detecta campañas, promociones y tácticas de marketing de la competencia
-- **Comparativa de precios**: Analiza y compara estructuras de precios y ofertas
-- **Detección de innovaciones**: Identifica nuevas tendencias y mejoras tecnológicas
-- **Recomendaciones estratégicas**: Proporciona sugerencias accionables para Antares Innovate
+- Análisis diario automatizado de competidores directos e indirectos
+- Generación de informes ejecutivos detallados
+- Monitoreo de estrategias de competidores
+- Análisis de precios y estructuras de costos
+- Detección de innovaciones en el mercado
+- Chat interactivo para consultas específicas
+- Interfaz web para visualización de informes
 
-## Endpoints de la API
+## Tecnología
 
-- **`/`**: Información general sobre la API
-- **`/chat`**: Para interactuar con el agente mediante conversación
-- **`/report`**: Obtener el informe diario más reciente
-- **`/reports`**: Listar todos los informes disponibles (últimos 30 días)
-- **`/generate-report`**: Forzar la generación de un nuevo informe
-- **`/reset`**: Reiniciar una sesión de conversación
-- **`/health`**: Verificar el estado del servicio
+- Backend: Flask (Python)
+- Modelo de IA: neural-chat:7b via Ollama
+- Análisis web: BeautifulSoup
+- Programación de tareas: Schedule
 
-## Configuración
+## Instalación y Ejecución
 
-El servicio utiliza las siguientes variables de entorno:
+### Usando Docker
 
-- `OLLAMA_URL`: URL del servicio Ollama (por defecto: "https://evaenespanol.loca.lt")
-- `MODEL_NAME`: Modelo a utilizar (por defecto: "llama3:8b")
-- `PORT`: Puerto en el que se ejecutará el servicio (por defecto: 5000)
+1. Construye la imagen de Docker:
+bash
+docker build -t curiosity-agent .
+
+
+2. Ejecuta el contenedor:
+bash
+docker run -p 5000:5000 curiosity-agent
+
+
+### Usando Python directamente
+
+1. Instala las dependencias:
+bash
+pip install -r requirements.txt
+
+
+2. Ejecuta la aplicación:
+bash
+python app.py
+
+
+### Variables de entorno
+
+- OLLAMA_URL: URL del servicio Ollama (por defecto: "https://evaenespanol.loca.lt")
+- MODEL_NAME: Nombre del modelo a utilizar (por defecto: "neural-chat:7b")
+- PORT: Puerto en el que se ejecutará la aplicación (por defecto: 5000)
 
 ## Despliegue en Render
 
-El repositorio incluye un archivo `render.yaml` para facilitar el despliegue en Render.com:
+Este proyecto incluye un archivo render.yaml para facilitar el despliegue en la plataforma Render.
 
-1. Crea una cuenta en Render.com
-2. Conecta tu repositorio de GitHub
-3. Haz clic en "New Web Service"
-4. Selecciona "Blueprint" y elige este repositorio
-5. Render detectará automáticamente la configuración del archivo render.yaml
-6. Haz clic en "Create Service"
+1. Crea un repositorio en GitHub con el código del proyecto
+2. En Render, selecciona "Blueprint" y apunta al repositorio
+3. Render configurará automáticamente el servicio según las especificaciones del archivo render.yaml
 
-## Desarrollo Local
+## Endpoints API
 
-Para ejecutar el servicio localmente:
+- GET /: Información general sobre el servicio
+- POST /chat: Interactuar con Curiosity mediante mensajes
+- GET /report: Obtener el último informe de análisis competitivo
+- GET /reports: Listar todos los informes disponibles
+- GET /report/{id}: Obtener un informe específico por su ID
+- POST /generate-report: Solicitar un nuevo análisis de mercado
+- POST /reset: Reiniciar una sesión de conversación
+- GET /health: Verificar estado del servicio
+- POST /analyze-competitor: Analizar un competidor específico por su URL
+- POST /custom-report: Generar un informe personalizado
+- GET /competitors: Ver lista de competidores analizados
+- GET /web-interface: Interfaz web para interactuar con Curiosity
 
-```bash
-# Instalar dependencias
-pip install -r requirements.txt
+## Notas para los desarrolladores
 
-# Configurar variables de entorno (opcional)
-export OLLAMA_URL=https://evaenespanol.loca.lt
-export MODEL_NAME=llama3:8b
-
-# Iniciar el servicio
-python app.py
-```
+- Los informes se generan automáticamente a las 7:00 AM y 4:00 PM (hora del servidor)
+- Los datos de competidores se actualizan cada 6 horas
+- Se recomienda personalizar la lista COMPETITORS_URLS en el código para añadir competidores relevantes
 
 ## Ejemplo de uso
 
-### Interactuar con el agente
+python
+import requests
 
-```bash
-curl -X POST http://localhost:5000/chat \
-  -H "Content-Type: application/json" \
-  -d '{"message": "¿Puedes analizar los competidores en el mercado de chatbots para atención al cliente?", "session_id": "usuario123"}'
-```
+# Interactuar con Curiosity
+response = requests.post('http://localhost:5000/chat', json={
+    'message': '¿Cuáles son las principales tendencias en IA conversacional para 2025?',
+    'session_id': 'mi_sesion_123'
+})
 
-### Obtener el último informe
+print(response.json()['response'])
 
-```bash
-curl -X GET http://localhost:5000/report
-```
+# Generar un informe personalizado
+response = requests.post('http://localhost:5000/custom-report', json={
+    'focus_area': 'innovation',
+    'industry': 'fintech',
+    'region': 'latam'
+})
 
-### Generar un nuevo informe
-
-```bash
-curl -X POST http://localhost:5000/generate-report
-```
-
-## Estructura del Informe
-
-Los informes generados por Curiosity siguen esta estructura:
-
-1. **Nuevos Competidores Detectados**: Empresas recientemente identificadas
-2. **Campañas Destacadas**: Estrategias y tácticas de marketing relevantes
-3. **Innovaciones Relevantes**: Tendencias tecnológicas y nuevas integraciones
-4. **Comparativo de Precios**: Tabla comparativa de los principales competidores
-5. **Recomendaciones para Antares Innovate**: Sugerencias estratégicas accionables
-
-## Contribución
-
-Para contribuir a este proyecto:
-
-1. Haz un fork del repositorio
-2. Crea una rama para tu funcionalidad (`git checkout -b feature/nueva-funcionalidad`)
-3. Realiza tus cambios y haz commit (`git commit -m 'Añadir nueva funcionalidad'`)
-4. Sube tus cambios (`git push origin feature/nueva-funcionalidad`)
-5. Abre un Pull Request
+print(response.json()['content'])
