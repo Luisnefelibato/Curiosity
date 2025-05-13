@@ -1,18 +1,26 @@
 services:
+  # Define el servicio web para Curiosity
   - type: web
-    name: curiosity
-    runtime: python
-    plan: starter
-    repo: https://github.com/yourusername/curiosity-agent.git
-    branch: main
+    name: curiosity-chat
+    env: python
+    plan: free
+    
+    # Configuración del build
     buildCommand: pip install -r requirements.txt
+    
+    # Comando para iniciar el servicio
     startCommand: gunicorn app:app
-    healthCheckPath: /health
+    
+    # Variables de entorno
     envVars:
       - key: OLLAMA_URL
         value: https://evaenespanol.loca.lt
       - key: MODEL_NAME
         value: neural-chat:7b
       - key: PORT
-        value: 10000
+        sync: false # No sincronizar con el puerto asignado por Render
+      - key: PYTHONUNBUFFERED
+        value: "true" # Asegura que los logs se muestren inmediatamente
+    
+    # Configuración de autodespliegue desde GitHub
     autoDeploy: true

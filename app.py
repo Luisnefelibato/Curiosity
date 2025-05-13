@@ -209,6 +209,12 @@ def home():
             "/chat": "POST - Interactuar con Curiosity mediante mensajes",
             "/reset": "POST - Reiniciar una sesión de conversación",
             "/health": "GET - Verificar estado del servicio",
+            # Mantenemos las mismas rutas para compatibilidad con el frontend, pero ahora devolverán respuestas mínimas
+            "/report": "GET - Obtener el último informe (ruta mantenida para compatibilidad)",
+            "/reports": "GET - Listar todos los informes (ruta mantenida para compatibilidad)",
+            "/report/{id}": "GET - Obtener un informe específico (ruta mantenida para compatibilidad)",
+            "/generate-report": "POST - Solicitar un nuevo análisis (ruta mantenida para compatibilidad)",
+            "/competitors": "GET - Ver lista de competidores (ruta mantenida para compatibilidad)"
         },
         "contact": "Para más información, visite www.antaresinnovate.com"
     })
@@ -280,8 +286,89 @@ def health_check():
         "model": MODEL_NAME,
         "ollama_url": OLLAMA_URL,
         "active_sessions": len(sessions),
+        "reports_count": 0,  # Siempre 0 ya que no hay informes
+        "competitors_analyzed": 0,  # Siempre 0 ya que no hay competidores
+        "last_report_age_hours": "N/A",  # No aplicable
+        "last_competitor_update": "N/A",  # No aplicable
+        "next_scheduled_report": "N/A",  # No aplicable
         "version": "1.0.0",
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    })
+
+# Rutas mantenidas para compatibilidad con el frontend pero con funcionalidad mínima
+@app.route('/report', methods=['GET'])
+def get_latest_report():
+    """Obtener el informe diario más reciente (mantenido para compatibilidad)"""
+    return jsonify({
+        "id": str(uuid.uuid4()),
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "content": "Esta funcionalidad no está disponible en esta versión. Por favor, use el chat para interactuar con Curiosity."
+    })
+
+@app.route('/reports', methods=['GET'])
+def list_reports():
+    """Listar todos los informes disponibles (mantenido para compatibilidad)"""
+    return jsonify({
+        "count": 0,
+        "reports": []
+    })
+
+@app.route('/report/<report_id>', methods=['GET'])
+def get_report_by_id(report_id):
+    """Obtener un informe específico por su ID (mantenido para compatibilidad)"""
+    return jsonify({
+        "id": report_id,
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "content": "Esta funcionalidad no está disponible en esta versión. Por favor, use el chat para interactuar con Curiosity."
+    })
+
+@app.route('/generate-report', methods=['POST'])
+def force_report_generation():
+    """Forzar la generación de un nuevo informe (mantenido para compatibilidad)"""
+    report_id = str(uuid.uuid4())
+    return jsonify({
+        "message": "Esta funcionalidad no está disponible en esta versión.",
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "id": report_id,
+        "content": "Por favor, use el chat para interactuar con Curiosity."
+    })
+
+@app.route('/competitors', methods=['GET'])
+def list_competitors():
+    """Listar competidores analizados (mantenido para compatibilidad)"""
+    return jsonify({
+        "count": 0,
+        "competitors": []
+    })
+
+@app.route('/analyze-competitor', methods=['POST'])
+def analyze_competitor():
+    """Analizar un competidor específico por su URL (mantenido para compatibilidad)"""
+    data = request.json
+    
+    if not data or 'url' not in data:
+        return jsonify({"error": "Se requiere una 'url' en el JSON"}), 400
+    
+    url = data.get('url')
+    
+    return jsonify({
+        "message": "Esta funcionalidad no está disponible en esta versión.",
+        "competitor": {
+            "name": "Nombre no disponible",
+            "url": url,
+            "analysis": "La funcionalidad de análisis de competidores no está disponible en esta versión. Por favor, pregunte directamente en el chat sobre competidores específicos."
+        }
+    })
+
+@app.route('/custom-report', methods=['POST'])
+def generate_custom_report():
+    """Generar un informe personalizado (mantenido para compatibilidad)"""
+    report_id = str(uuid.uuid4())
+    return jsonify({
+        "message": "Esta funcionalidad no está disponible en esta versión.",
+        "report_id": report_id,
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "content": "Por favor, use el chat para interactuar con Curiosity y pregunte directamente por lo que necesita."
     })
 
 @app.route('/web-interface')
