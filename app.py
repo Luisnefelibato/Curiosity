@@ -7,6 +7,7 @@ from datetime import datetime
 from threading import Lock
 import time
 import uuid
+from flask_cors import CORS  # Asegúrate de que esta línea esté presente
 
 # Configuración de logging
 logging.basicConfig(
@@ -16,6 +17,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
+# Habilitar CORS para todas las rutas y orígenes
+CORS(app, resources={r"/": {"origins": ""}})  # Para desarrollo
 
 # Configuración de la API de Ollama
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "https://evaenespanol.loca.lt")
@@ -219,9 +222,13 @@ def home():
         "contact": "Para más información, visite www.antaresinnovate.com"
     })
 
-@app.route('/chat', methods=['POST'])
+@app.route('/chat', methods=['POST', 'OPTIONS'])
 def chat():
     """Endpoint para interactuar con el agente"""
+    # Manejo de solicitud OPTIONS para preflight CORS
+    if request.method == 'OPTIONS':
+        return '', 204
+        
     data = request.json
     
     if not data or 'message' not in data:
@@ -260,9 +267,13 @@ def chat():
         "session_id": session_id
     })
 
-@app.route('/reset', methods=['POST'])
+@app.route('/reset', methods=['POST', 'OPTIONS'])
 def reset_session():
     """Reiniciar una sesión de conversación"""
+    # Manejo de solicitud OPTIONS para preflight CORS
+    if request.method == 'OPTIONS':
+        return '', 204
+        
     data = request.json or {}
     session_id = data.get('session_id', 'default')
     
@@ -276,9 +287,13 @@ def reset_session():
     
     return jsonify({"message": message, "session_id": session_id})
 
-@app.route('/health', methods=['GET'])
+@app.route('/health', methods=['GET', 'OPTIONS'])
 def health_check():
     """Verificar estado del servicio con información adicional de Antares"""
+    # Manejo de solicitud OPTIONS para preflight CORS
+    if request.method == 'OPTIONS':
+        return '', 204
+        
     return jsonify({
         "status": "ok",
         "service_name": "Curiosity - Chat Assistant",
@@ -296,35 +311,51 @@ def health_check():
     })
 
 # Rutas mantenidas para compatibilidad con el frontend pero con funcionalidad mínima
-@app.route('/report', methods=['GET'])
+@app.route('/report', methods=['GET', 'OPTIONS'])
 def get_latest_report():
     """Obtener el informe diario más reciente (mantenido para compatibilidad)"""
+    # Manejo de solicitud OPTIONS para preflight CORS
+    if request.method == 'OPTIONS':
+        return '', 204
+        
     return jsonify({
         "id": str(uuid.uuid4()),
         "date": datetime.now().strftime("%Y-%m-%d"),
         "content": "Esta funcionalidad no está disponible en esta versión. Por favor, use el chat para interactuar con Curiosity."
     })
 
-@app.route('/reports', methods=['GET'])
+@app.route('/reports', methods=['GET', 'OPTIONS'])
 def list_reports():
     """Listar todos los informes disponibles (mantenido para compatibilidad)"""
+    # Manejo de solicitud OPTIONS para preflight CORS
+    if request.method == 'OPTIONS':
+        return '', 204
+        
     return jsonify({
         "count": 0,
         "reports": []
     })
 
-@app.route('/report/<report_id>', methods=['GET'])
+@app.route('/report/<report_id>', methods=['GET', 'OPTIONS'])
 def get_report_by_id(report_id):
     """Obtener un informe específico por su ID (mantenido para compatibilidad)"""
+    # Manejo de solicitud OPTIONS para preflight CORS
+    if request.method == 'OPTIONS':
+        return '', 204
+        
     return jsonify({
         "id": report_id,
         "date": datetime.now().strftime("%Y-%m-%d"),
         "content": "Esta funcionalidad no está disponible en esta versión. Por favor, use el chat para interactuar con Curiosity."
     })
 
-@app.route('/generate-report', methods=['POST'])
+@app.route('/generate-report', methods=['POST', 'OPTIONS'])
 def force_report_generation():
     """Forzar la generación de un nuevo informe (mantenido para compatibilidad)"""
+    # Manejo de solicitud OPTIONS para preflight CORS
+    if request.method == 'OPTIONS':
+        return '', 204
+        
     report_id = str(uuid.uuid4())
     return jsonify({
         "message": "Esta funcionalidad no está disponible en esta versión.",
@@ -333,17 +364,25 @@ def force_report_generation():
         "content": "Por favor, use el chat para interactuar con Curiosity."
     })
 
-@app.route('/competitors', methods=['GET'])
+@app.route('/competitors', methods=['GET', 'OPTIONS'])
 def list_competitors():
     """Listar competidores analizados (mantenido para compatibilidad)"""
+    # Manejo de solicitud OPTIONS para preflight CORS
+    if request.method == 'OPTIONS':
+        return '', 204
+        
     return jsonify({
         "count": 0,
         "competitors": []
     })
 
-@app.route('/analyze-competitor', methods=['POST'])
+@app.route('/analyze-competitor', methods=['POST', 'OPTIONS'])
 def analyze_competitor():
     """Analizar un competidor específico por su URL (mantenido para compatibilidad)"""
+    # Manejo de solicitud OPTIONS para preflight CORS
+    if request.method == 'OPTIONS':
+        return '', 204
+        
     data = request.json
     
     if not data or 'url' not in data:
@@ -360,9 +399,13 @@ def analyze_competitor():
         }
     })
 
-@app.route('/custom-report', methods=['POST'])
+@app.route('/custom-report', methods=['POST', 'OPTIONS'])
 def generate_custom_report():
     """Generar un informe personalizado (mantenido para compatibilidad)"""
+    # Manejo de solicitud OPTIONS para preflight CORS
+    if request.method == 'OPTIONS':
+        return '', 204
+        
     report_id = str(uuid.uuid4())
     return jsonify({
         "message": "Esta funcionalidad no está disponible en esta versión.",
